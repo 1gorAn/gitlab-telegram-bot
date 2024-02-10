@@ -82,6 +82,24 @@ return [
         ]
     ],
     'project' => [
-        'title' => 'Project'
+        'title' => 'Project',
+        'slug' => 'Code project',
+        'title_name' => 'Project name',
+        'activity' => 'Activity',
+        'script' => 'Activity',
+
+        'step' => [
+            'one_title' => 'Step 1',
+            'one_text' => 'To begin, you need to create a file named .ci-notify.sh in the project.',
+
+            'two_title' => 'Step 2',
+            'two_text' => 'Now copy the provided code and paste it into the file created in the first step.',
+
+            'three_title' => 'Step 3',
+            'three_text' => 'In the .gitlab-ci.yml file, locate the desired stage and add a script section if it doesn\'t exist. Then, within the script section, add the line "sh .ci-notify.sh" at the end of the line and pass the argument.',
+
+            'four_title' => 'Step 4',
+            'four_text' => 'At the final step, simply push the changes to the repository, and you will receive a notification.',
+        ]
     ]
 ];

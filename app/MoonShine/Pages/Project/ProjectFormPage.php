@@ -9,6 +9,7 @@ use MoonShine\Decorations\Block;
 use MoonShine\Decorations\Tab;
 use MoonShine\Decorations\Tabs;
 use MoonShine\Fields\ID;
+use MoonShine\Fields\Switcher;
 use MoonShine\Fields\Text;
 use MoonShine\Pages\Crud\FormPage;
 
@@ -22,6 +23,9 @@ class ProjectFormPage extends FormPage
                     Tab::make(__('moonshine::ui.resource.main_information'), [
                         ID::make()
                             ->sortable()
+                            ->showOnExport(),
+
+                        Switcher::make(__('moonshine::ui.project.activity'), 'activity')
                             ->showOnExport(),
 
                         Text::make(__('moonshine::ui.project.title'), 'title')
