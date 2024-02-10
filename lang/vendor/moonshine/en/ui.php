@@ -82,11 +82,13 @@ return [
         ]
     ],
     'project' => [
-        'title' => 'Project',
-        'slug' => 'Code project',
-        'title_name' => 'Project name',
+        'title' => 'Projects',
+        'slug' => 'Code',
+        'title_name' => 'Name',
         'activity' => 'Activity',
         'script' => 'Activity',
+        'employees' => 'Employees',
+        'show_script' => 'Installation',
 
         'step' => [
             'one_title' => 'Step 1',

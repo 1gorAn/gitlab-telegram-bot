@@ -44,6 +44,6 @@ class ProjectResource extends ModelResource
 
     public function search(): array
     {
-        return ['name'];
+        return ['title'];
     }
 }

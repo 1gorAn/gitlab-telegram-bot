@@ -87,6 +87,8 @@ return [
         'title_name' => 'Название проекта',
         'activity' => 'Активность',
         'script' => 'Активность',
+        'employees' => 'Сотрудники',
+        'show_script' => 'Установка',
 
         'step' => [
             'one_title' => 'Шаг 1',
