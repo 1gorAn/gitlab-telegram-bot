@@ -47,7 +47,16 @@ class ProjectDetailPage extends DetailPage
     {
         return [
             Block::make(__('moonshine::ui.project.step.one_title'), [
-                FlexibleRender::make(__('moonshine::ui.project.step.one_text'))
+                FlexibleRender::make(__('moonshine::ui.project.step.one_text')),
+
+                Block::make([
+                    Code::make('', 'script')
+                        ->lineNumbers()
+                        ->language('js')
+                        ->fill($this->getScript())
+                ])->withAttributes([
+                    'style' => 'padding: .8em 0 0 0;'
+                ]),
             ])->withAttributes([
                 'style' => 'margin-bottom: .8em;'
             ]),
@@ -55,43 +64,52 @@ class ProjectDetailPage extends DetailPage
             Block::make(__('moonshine::ui.project.step.two_title'), [
                 FlexibleRender::make(__('moonshine::ui.project.step.two_text')),
 
-                Code::make('', 'script')
-                    ->lineNumbers()
-                    ->language('js')
-                    ->fill($this->getScript()),
+                Block::make([
+                    Code::make('', 'script')
+                        ->lineNumbers()
+                        ->language('js')
+                        ->fill($this->getGitLabCi())
+                ])->withAttributes([
+                    'style' => 'padding: .8em 0 0 0;'
+                ]),
             ])->withAttributes([
                 'style' => 'margin-bottom: .8em;'
             ]),
+
 
             Block::make(__('moonshine::ui.project.step.three_title'), [
-                FlexibleRender::make(__('moonshine::ui.project.step.three_text')),
-
-                Code::make('', 'script')
-                    ->lineNumbers()
-                    ->language('js')
-                    ->fill($this->getGitLabCi()),
-            ])->withAttributes([
-                'style' => 'margin-bottom: .8em;'
-            ]),
-
-
-            Block::make(__('moonshine::ui.project.step.four_title'), [
-                FlexibleRender::make(__('moonshine::ui.project.step.four_text'))
+                FlexibleRender::make(__('moonshine::ui.project.step.three_text'))
             ]),
 
             ...parent::bottomLayer()
         ];
     }
 
+    protected function getHost()
+    {
+        $host = config('app.url');
+
+        $item = $this->getResource()->getItem();
+
+        $params = [
+            'project' => $item->getAttribute('id'),
+            'dd' => 12
+        ];
+
+        return $host . '?' . http_build_query($params);
+    }
+
     protected function getScript(): string
     {
+        $host = $this->getHost();
+
         $script = '#!/bin/bash
 
 TIME="10"
-URL="https://api.telegram.org/bot5621080337:AAEmsa1WQe_c98lc5V_hx7emCwR8DdZY4iA/sendMessage"
+URL="'. $host .'"
 TEXT="Deploy status: $1%0A%0AProject:+$CI_PROJECT_NAME%0AURL:+$CI_PROJECT_URL/pipelines/$CI_PIPELINE_ID/%0ABranch:+$CI_COMMIT_REF_SLUG"
 
-curl -s --max-time $TIME -d "chat_id=284762261&disable_web_page_preview=1&text=$TEXT" $URL > /dev/null
+curl -s --max-time $TIME -d "text=$TEXT" $URL > /dev/null
         ';
 
         return $script;
@@ -107,35 +125,35 @@ curl -s --max-time $TIME -d "chat_id=284762261&disable_web_page_preview=1&text=$
 
 build:
   tags:
-    - thermos-telegram
+    - shop
   stage:
     build
   script:
     -  docker-compose build
     -  sh .ci-notify.sh 🚀
   only:
-    - master
+    - main
 
 push:
   tags:
-    - thermos-telegram
+    - shop
   stage:
     push
   script:
     -  docker-compose push
     -  sh .ci-notify.sh ✅
   only:
-    - master
+    - main
 
 run:
   tags:
-    - thermos-telegram
+    - shop
   stage:
     run
   script:
     - docker stack deploy --compose-file docker-compose.yml thermos-telegram
   only:
-    - master
+    - main
 
 notify_error:
   stage: notify
