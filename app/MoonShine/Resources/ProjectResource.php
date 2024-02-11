@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace App\MoonShine\Resources;
 
+use App\MoonShine\Pages\Project\ProjectEmployeesPage;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Project;
 use App\MoonShine\Pages\Project\ProjectIndexPage;
 use App\MoonShine\Pages\Project\ProjectFormPage;
 use App\MoonShine\Pages\Project\ProjectDetailPage;
-
 use MoonShine\Attributes\Icon;
+use MoonShine\Pages\Page;
 use MoonShine\Resources\ModelResource;
 
 /**
@@ -34,8 +35,10 @@ class ProjectResource extends ModelResource
                     : __('moonshine::ui.add')
             ),
             ProjectDetailPage::make(__('moonshine::ui.show')),
+            ProjectEmployeesPage::make($this->getItemID())
         ];
     }
+
 
     public function rules(Model $item): array
     {

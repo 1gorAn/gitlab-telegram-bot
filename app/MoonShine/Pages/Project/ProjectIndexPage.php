@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\MoonShine\Pages\Project;
 
+use App\Models\Project;
 use Illuminate\Database\Eloquent\Model;
 use MoonShine\ActionButtons\ActionButton;
 use MoonShine\Buttons\CreateButton;
@@ -56,20 +57,16 @@ class ProjectIndexPage extends IndexPage
 
     protected function getGroupUsersButton(ModelResource $resource)
     {
-        $action = static fn ($data): string => $resource->formPageUrl($data);
+        $action = static fn ($data): string => $resource->fragmentLoadUrl(
+            '',
+            ProjectEmployeesPage::make('wqw'),
+            $data,
+        );
 
         return ActionButton::make(
             __('moonshine::ui.project.employees'),
             url: $action
         )
-            ->when(
-                $resource->isEditInModal(),
-                fn (ActionButton $button): ActionButton => $button->inModal(
-                    fn (): array|string|null => __('moonshine::ui.edit'),
-                    fn (): string => '',
-                    async: true
-                )
-            )
             ->success()
             ->icon('heroicons.outline.users');
     }

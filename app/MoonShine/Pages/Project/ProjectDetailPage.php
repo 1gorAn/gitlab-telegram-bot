@@ -20,13 +20,7 @@ class ProjectDetailPage extends DetailPage
 {
     public function fields(): array
     {
-        return [
-//            Switcher::make(__('moonshine::ui.project.activity'), 'activity'),
-//
-//            Text::make(__('moonshine::ui.project.title'), 'title'),
-//
-//            Text::make(__('moonshine::ui.project.slug'), 'slug'),
-        ];
+        return [];
     }
 
     protected function topLayer(): array
@@ -38,9 +32,7 @@ class ProjectDetailPage extends DetailPage
 
     protected function mainLayer(): array
     {
-        return [
-//            ...parent::mainLayer()
-        ];
+        return [];
     }
 
     protected function bottomLayer(): array
@@ -85,29 +77,30 @@ class ProjectDetailPage extends DetailPage
         ];
     }
 
-    protected function getHost()
+    protected function getHost(): string
     {
-        $host = config('app.url');
-
         $item = $this->getResource()->getItem();
 
-        $params = [
-            'project' => $item->getAttribute('id'),
-            'dd' => 12
-        ];
-
-        return $host . '?' . http_build_query($params);
+        return config('app.url') . '/api/gitlab/' . $item->getAttribute('id');
     }
 
     protected function getScript(): string
     {
         $host = $this->getHost();
 
+        $params = [
+            'CI_PROJECT_NAME:$CI_PROJECT_NAME',
+            'CI_PROJECT_URL:$CI_PROJECT_URL',
+            'CI_PIPELINE_ID:$CI_PIPELINE_ID',
+            'CI_COMMIT_REF_SLUG:$CI_COMMIT_REF_SLUG',
+            'CI_COMMIT_MESSAGE:$CI_COMMIT_MESSAGE',
+        ];
+
         $script = '#!/bin/bash
 
 TIME="10"
 URL="'. $host .'"
-TEXT="Deploy status: $1%0A%0AProject:+$CI_PROJECT_NAME%0AURL:+$CI_PROJECT_URL/pipelines/$CI_PIPELINE_ID/%0ABranch:+$CI_COMMIT_REF_SLUG"
+TEXT="' . implode(';', $params) . '"
 
 curl -s --max-time $TIME -d "text=$TEXT" $URL > /dev/null
         ';
@@ -115,7 +108,7 @@ curl -s --max-time $TIME -d "text=$TEXT" $URL > /dev/null
         return $script;
     }
 
-    protected function getGitLabCi()
+    protected function getGitLabCi(): string
     {
         return 'stages:
   - "build"
@@ -151,7 +144,7 @@ run:
   stage:
     run
   script:
-    - docker stack deploy --compose-file docker-compose.yml thermos-telegram
+    - docker stack deploy --compose-file docker-compose.yml shop
   only:
     - main
 
