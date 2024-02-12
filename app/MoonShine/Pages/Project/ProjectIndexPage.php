@@ -59,7 +59,7 @@ class ProjectIndexPage extends IndexPage
     {
         $action = static fn ($data): string => $resource->fragmentLoadUrl(
             '',
-            ProjectEmployeesPage::make('wqw'),
+            ProjectEmployeesPage::make(),
             $data,
         );
 

@@ -82,6 +82,7 @@ return [
         ]
     ],
     'project' => [
+        'project' => 'Project',
         'title' => 'Projects',
         'slug' => 'Code',
         'title_name' => 'Name',
