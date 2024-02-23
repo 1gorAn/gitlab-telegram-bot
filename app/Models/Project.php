@@ -12,4 +12,9 @@ class Project extends Model
     protected $casts = [
         'activity' => 'boolean'
     ];
+
+    public function employee()
+    {
+        return $this->hasMany(Employee::class);
+    }
 }
